@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\alumno;
+use Gate;
 use Illuminate\Http\Request;
 
 class AlumnoController extends Controller
@@ -12,6 +13,7 @@ class AlumnoController extends Controller
      */
     public function index()
     {
+        
         $alumnos = alumno::paginate(10);
         return view('alumnos.index',[
             'alumnos'=>$alumnos
@@ -23,7 +25,12 @@ class AlumnoController extends Controller
      */
     public function create()
     {
-        //
+        
+        Gate::authorize('alumno-create');
+
+        return view('alumnos.create',
+            ['alumnos'=>alumno::all()]
+        );
     }
 
     /**
@@ -31,7 +38,13 @@ class AlumnoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $datos = $request->validate([
+            'nombre'=>'required|max:255',
+            'telefono'=>'required|max:255'
+        ]);
+
+        Alumno::create($datos);
+        return redirect()->route('alumnos.index');
     }
 
     /**
@@ -49,6 +62,7 @@ class AlumnoController extends Controller
      */
     public function edit(alumno $alumno)
     {
+        Gate::authorize('alumno-edit');
         return view('alumnos.edit',['alumno'=>$alumno]);
     }
 
@@ -70,7 +84,10 @@ class AlumnoController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(alumno $alumno)
+
     {
+        Gate::authorize('alumno-delete');
+        
         if($alumno->notas()->exists()) {
             return back();
         }

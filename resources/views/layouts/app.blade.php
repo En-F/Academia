@@ -26,6 +26,23 @@
             <div class="flex-none">
                 <ul class="menu menu-horizontal px-1">
                     <li><a href="{{ route('alumnos.index') }}">Alumno</a></li>
+                    <li>
+                        @auth
+                            <details>
+                                <summary>{{ Auth::user()->name }}</summary>
+                                <ul class="bg-base-100 rounded-t-none p-2 z-1">
+                                    <li>
+                                        <form method="POST" action="{{ route('logout') }}">
+                                            @csrf
+                                            <button type="submit">Salir</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </details>
+                        @else
+                            <a href="{{ route('login') }}">Login</a>
+                        @endauth
+                    </li>
                 </ul>
             </div>
         </div>

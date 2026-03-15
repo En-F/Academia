@@ -16,12 +16,15 @@
                     <td>{{ $alumno->telefono }}</td>
                     <td>
                         <div class="flex gap-2">
+                            @can('alumno-edit',$alumno)
                             <a
                                 class="btn btn-sm btn-ghost btn-info"
                                 href="{{ route('alumnos.edit', $alumno) }}"
                             >
                                 Editar
                             </a>
+                            @endcan
+                            @can('alumno-delete',$alumno)
                                 <form
                                     method="POST"
                                     action="{{ route('alumnos.destroy', $alumno) }}"
@@ -36,13 +39,15 @@
                                         Eliminar
                                     </button>
                                 </form>
+                            @endcan
                         </td>
                     </div>
                 </tr>
             @endforeach
         </tbody>
     </table>
+    @can('alumno-create')
         <a class="btn btn-sm btn-ghost btn-primary" href="{{ route('alumnos.create') }}">Dar de alta un nuevo alumno</a>
-
+    @endcan
 </x-app-layout>
 
